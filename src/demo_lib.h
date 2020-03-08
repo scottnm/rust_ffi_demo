@@ -3,59 +3,41 @@
 
 #include <stdint.h>
 
-enum E_DL_EventType
+typedef enum
 {
     DL_EventType_Created,
     DL_EventType_Destroyed,
     DL_EventType_Changed,
-};
+} DL_EventType;
 
-// TODO: C11 support - see if I can drop the enum prefix
-typedef enum E_DL_EventType DL_EventType;
-
-struct S_DL_Event
+typedef struct
 {
     DL_EventType type;
-};
+} DL_Event;
 
-// TODO: C11 support - see if I can drop the struct prefix
-typedef struct S_DL_Event DL_Event;
-
-struct S_DL_CreatedEvent
+typedef struct
 {
     DL_Event baseEvent;
     const char* creationString;
-};
+} DL_CreatedEvent;
 
-// TODO: C11 support - see if I can drop the struct prefix
-typedef struct S_DL_CreatedEvent DL_CreatedEvent;
-
-struct S_DL_DestroyedEvent
+typedef struct
 {
     DL_Event baseEvent;
     uint8_t destroyedByte;
-};
+} DL_DestroyedEvent;
 
-// TODO: C11 support - see if I can drop the struct prefix
-typedef struct S_DL_DestroyedEvent DL_DestroyedEvent;
-
-enum E_ChangedState
+typedef enum
 {
     ChangedEvent_StateA,
     ChangedEvent_StateB,
-};
+} ChangedState;
 
-// TODO: C11 support - see if I can drop the enum prefix
-typedef enum E_ChangedState ChangedState;
-
-struct S_DL_ChangedEvent
+typedef struct
 {
     DL_Event baseEvent;
     ChangedState changedState;
-};
-
-// TODO: C11 support - see if I can drop the struct prefix
-typedef struct S_DL_ChangedEvent DL_ChangedEvent;
+} DL_ChangedEvent;
 
 // Provide events as a list of event pointers.
 // The list of pointers and the values pointed to are read-only.
