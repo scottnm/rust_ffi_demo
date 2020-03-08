@@ -1,32 +1,49 @@
 #include "demo_lib.h"
 
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
 #define UNUSED(x) do { (void)(x); } while(0)
 
 // Mock state
-static const DL_CreatedEvent createEvent =
+static const DL_CreatedEvent CREATED_EVENT =
 {
     { DL_EventType_Created },
     "Creation",
 };
 
-static const DL_DestroyedEvent destroyEvent =
+static const DL_DestroyedEvent DESTROYED_EVENT =
 {
     { DL_EventType_Destroyed },
     'D',
 };
 
-static const DL_ChangedEvent changeEvent =
+static const DL_ChangedEvent CHANGED_EVENT =
 {
     { DL_EventType_Changed },
     ChangedEvent_StateB,
 };
 
-static const DL_Event* eventList[] =
+static DL_Event const * const EVENT_LIST[] =
 {
-    (const DL_Event*)&changeEvent,
-    (const DL_Event*)&createEvent,
-    (const DL_Event*)&destroyEvent,
+    (const DL_Event*)&CHANGED_EVENT,
+    (const DL_Event*)&CREATED_EVENT,
+    (const DL_Event*)&DESTROYED_EVENT,
 };
+
+static uint32_t G_currentEventCount = 0;
+static DL_Event_List G_currentEvents = NULL;
+
+static
+bool
+streq(
+    const char* str1,
+    const char* str2
+    )
+{
+    return strcmp(str1, str2) == 0;
+}
 
 int
 GetEvents(
@@ -35,8 +52,16 @@ GetEvents(
     )
 {
     // TODO: C11 support - use C11 initializers
-    *count = sizeof(eventList)/sizeof(eventList[0]);
-    *events = eventList;
+    if (G_currentEvents != NULL)
+    {
+        return 1;
+    }
+
+    G_currentEventCount = sizeof(EVENT_LIST)/sizeof(EVENT_LIST[0]);
+    G_currentEvents = EVENT_LIST;
+
+    *count = G_currentEventCount;
+    *events = G_currentEvents;
     return 0;
 }
 
@@ -46,9 +71,14 @@ ReturnEvents(
     DL_Event_List events
     )
 {
-    // TODO: verify that the events returned match what's was just queried
-    UNUSED(count);
-    UNUSED(events);
+    if (count != G_currentEventCount ||
+        events != G_currentEvents)
+    {
+        return 1;
+    }
+
+    G_currentEventCount = 0;
+    G_currentEvents = NULL;
     return 0;
 }
 
@@ -57,9 +87,7 @@ HandleCreatedEvent(
     const char* creationString
     )
 {
-    // TODO: impl
-    UNUSED(creationString);
-    return 0;
+    return !streq(creationString, CREATED_EVENT.creationString);
 }
 
 int
@@ -67,9 +95,7 @@ HandleDestroyedEvent(
     uint8_t destroyedByte
     )
 {
-    // TODO: impl
-    UNUSED(destroyedByte);
-    return 0;
+    return destroyedByte != DESTROYED_EVENT.destroyedByte;
 }
 
 int
@@ -77,7 +103,5 @@ HandleChangedEvent(
     ChangedState changedState
     )
 {
-    // TODO: impl
-    UNUSED(changedState);
-    return 0;
+    return changedState != CHANGED_EVENT.changedState;
 }

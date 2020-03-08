@@ -107,6 +107,7 @@ main(
     // Must call ReturnEvents with the events returned from GetEvents
     EXPECT_SUCCESS(GetEvents(&eventCount, &events));
     EXPECT_FAILURE(ReturnEvents(eventCount - 1, events + 1));
+    EXPECT_SUCCESS(ReturnEvents(eventCount, events));
 
     // Basic handle-function failure validation. Must pass in the expected parameters.
     EXPECT_SUCCESS(GetEvents(&eventCount, &events));
