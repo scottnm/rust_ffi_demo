@@ -28,9 +28,15 @@ main(
 
     uint32_t eventCount;
     DL_Event_List events;
-
     err = GetEvents(&eventCount, &events);
     EXIT_IF_ERR(err);
+
+    for (uint32_t i = 0; i < eventCount; ++i)
+    {
+        const DL_Event* event = events[i];
+        printf("Processing event of type %i\n", event->type);
+    }
+
     // TODO: call rest of APIs
 
     printf("...Succeeded!\n");

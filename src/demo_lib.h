@@ -57,7 +57,9 @@ struct S_DL_ChangedEvent
 // TODO: C11 support - see if I can drop the struct prefix
 typedef struct S_DL_ChangedEvent DL_ChangedEvent;
 
-typedef const DL_Event * DL_Event_List;
+// Provide events as a list of event pointers.
+// The list of pointers and the values pointed to are read-only.
+typedef DL_Event const * const * DL_Event_List;
 
 int
 GetEvents(
