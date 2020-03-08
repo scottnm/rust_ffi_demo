@@ -58,7 +58,7 @@ HandleCreatedEvent(
 {
     // TODO: impl
     UNUSED(creationString);
-    return 1;
+    return 0;
 }
 
 int
@@ -68,7 +68,7 @@ HandleDestroyedEvent(
 {
     // TODO: impl
     UNUSED(destroyedByte);
-    return 1;
+    return 0;
 }
 
 int
@@ -78,5 +78,5 @@ HandleChangedEvent(
 {
     // TODO: impl
     UNUSED(changedState);
-    return 1;
+    return 0;
 }
