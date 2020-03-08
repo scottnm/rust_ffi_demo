@@ -1,3 +1,5 @@
+use std::os::raw::c_char;
+
 #[repr(C)]
 enum FFI_DL_EventType
 {
@@ -12,7 +14,32 @@ struct FFI_DL_Event
     event_type: FFI_DL_EventType,
 }
 
-// TODO: add rest of FFI definitions
+#[repr(C)]
+struct FFI_DL_CreatedEvent
+{
+    baseEvent: FFI_DL_Event,
+    creationString: *const c_char,
+}
+
+#[repr(C)]
+struct FFI_DL_DestroyedEvent
+{
+    baseEvent: FFI_DL_Event,
+    destroyedByte: u8,
+}
+
+#[repr(C)]
+enum FFI_ChangedState
+{
+    A,
+    B,
+}
+
+struct FFI_DL_ChangedEvent
+{
+    baseEvent: FFI_DL_Event,
+    changedState: FFI_ChangedState,
+}
 
 type FFI_DL_EventList = *const *const FFI_DL_EventType;
 
@@ -31,5 +58,5 @@ fn main() {
         let res = GetEvents(count_ptr, events_ptr);
         println!("res={}, count={}, events={:?}", res, count, events);
     }
-    println!("Hello, world!");
+    println!("Done!");
 }
