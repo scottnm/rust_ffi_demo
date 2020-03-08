@@ -37,6 +37,8 @@ main(
         printf("Processing event of type %i\n", event->type);
     }
 
+    err = ReturnEvents(eventCount, events);
+    EXIT_IF_ERR(err);
     // TODO: call rest of APIs
 
     printf("...Succeeded!\n");

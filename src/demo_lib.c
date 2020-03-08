@@ -45,10 +45,10 @@ ReturnEvents(
     DL_Event_List events
     )
 {
-    // TODO: impl
+    // TODO: verify that the events returned match what's was just queried
     UNUSED(count);
     UNUSED(events);
-    return 1;
+    return 0;
 }
 
 int
