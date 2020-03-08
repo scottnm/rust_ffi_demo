@@ -47,7 +47,7 @@ type FFI_DL_EventList = *const *const FFI_DL_Event;
 
 #[link(name = "demo_lib_static", kind = "static")]
 extern {
-    // TODO: rename this test api to be better
+    // TODO: rename this test api to more clearly look like an external api
     fn GetEvents(/* Out */ count: *mut u32, /* Out */ events: *mut FFI_DL_EventList) -> i32;
 }
 
