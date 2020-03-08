@@ -16,6 +16,11 @@ function ExitIfErr
     }
 }
 
+function Write-Msg($msg)
+{
+    Write-Host -ForegroundColor Yellow $msg
+}
+
 # Default to build all if nothing is specified
 $All = (!$Direct -and !$Static);
 
@@ -25,7 +30,7 @@ $TargetDir = "$PSScriptRoot\..\target\"
 # Direct build
 if ($Direct -or $All)
 {
-    Write-Warning "DIRECT: compile all"
+    Write-Msg "DIRECT: compile all"
     cl /TC $SrcDir\demo_lib_test.c $SrcDir\demo_lib.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_direct.exe
     ExitIfErr;
 }
@@ -33,15 +38,15 @@ if ($Direct -or $All)
 # Static build
 if ($Static -or $All)
 {
-    Write-Warning "STATIC: compile libobj"
+    Write-Msg "STATIC: compile libobj"
     cl /TC $SrcDir\demo_lib.c /c /Fo:$TargetDir\demo_lib_static_lib.obj
     ExitIfErr;
 
-    Write-Warning "STATIC: link libobj to lib"
+    Write-Msg "STATIC: link libobj to lib"
     lib $TargetDir\demo_lib_static_lib.obj /OUT:$TargetDir\demo_lib_static.lib
     ExitIfErr;
 
-    Write-Warning "STATIC: compile test exe"
+    Write-Msg "STATIC: compile test exe"
     cl /TC $SrcDir\demo_lib_test.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_static.exe /link $TargetDir\demo_lib_static.lib
     ExitIfErr;
 }
