@@ -31,7 +31,7 @@ $TargetDir = "$PSScriptRoot\..\target\"
 if ($Direct -or $All)
 {
     Write-Msg "DIRECT: compile all"
-    cl /TC $SrcDir\demo_lib_test.c $SrcDir\demo_lib.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_direct.exe
+    cl /TC /W4 $SrcDir\demo_lib_test.c $SrcDir\demo_lib.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_direct.exe
     ExitIfErr;
 }
 
@@ -39,7 +39,7 @@ if ($Direct -or $All)
 if ($Static -or $All)
 {
     Write-Msg "STATIC: compile libobj"
-    cl /TC $SrcDir\demo_lib.c /c /Fo:$TargetDir\demo_lib_static_lib.obj
+    cl /TC /W4 $SrcDir\demo_lib.c /c /Fo:$TargetDir\demo_lib_static_lib.obj
     ExitIfErr;
 
     Write-Msg "STATIC: link libobj to lib"
@@ -47,6 +47,6 @@ if ($Static -or $All)
     ExitIfErr;
 
     Write-Msg "STATIC: compile test exe"
-    cl /TC $SrcDir\demo_lib_test.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_static.exe /link $TargetDir\demo_lib_static.lib
+    cl /TC /W4 $SrcDir\demo_lib_test.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_static.exe /link $TargetDir\demo_lib_static.lib
     ExitIfErr;
 }
