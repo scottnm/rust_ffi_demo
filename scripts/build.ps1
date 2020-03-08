@@ -7,4 +7,4 @@
 $SrcDir = "$PSScriptRoot\..\src\"
 $TargetDir = "$PSScriptRoot\..\target\"
 
-cl /TC $SrcDir\demo_lib_test.c /Fo:$TargetDir\demo_lib_test.obj /Fe:$TargetDir\demo_lib_test.exe
+cl /TC $SrcDir\demo_lib_test.c $SrcDir\demo_lib.c /Fo:$TargetDir /Fe:$TargetDir\demo_lib_test_direct.exe
