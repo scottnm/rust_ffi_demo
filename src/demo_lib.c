@@ -2,6 +2,32 @@
 
 #define UNUSED(x) do { (void)(x); } while(0)
 
+// Mock state
+static const DL_CreatedEvent createEvent =
+{
+    { DL_EventType_Created },
+    "Creation",
+};
+
+static const DL_DestroyedEvent destroyEvent =
+{
+    { DL_EventType_Destroyed },
+    'D',
+};
+
+static const DL_ChangedEvent changeEvent =
+{
+    { DL_EventType_Changed },
+    ChangedEvent_StateB,
+};
+
+static const DL_Event* eventList[] =
+{
+    (const DL_Event*)&changeEvent,
+    (const DL_Event*)&createEvent,
+    (const DL_Event*)&destroyEvent,
+};
+
 int
 GetEvents(
     _Out_ uint32_t* count,
@@ -9,31 +35,6 @@ GetEvents(
     )
 {
     // TODO: C11 support - use C11 initializers
-    static const DL_CreatedEvent createEvent =
-    {
-        { DL_EventType_Created },
-        "Creation",
-    };
-
-    static const DL_DestroyedEvent destroyEvent =
-    {
-        { DL_EventType_Destroyed },
-        'D',
-    };
-
-    static const DL_ChangedEvent changeEvent =
-    {
-        { DL_EventType_Changed },
-        ChangedEvent_StateB,
-    };
-
-    static const DL_Event* eventList[] =
-    {
-        (const DL_Event*)&changeEvent,
-        (const DL_Event*)&createEvent,
-        (const DL_Event*)&destroyEvent,
-    };
-
     *count = sizeof(eventList)/sizeof(eventList[0]);
     *events = eventList;
     return 0;
