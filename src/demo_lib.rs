@@ -1,4 +1,5 @@
 use std::os::raw::c_char;
+use std::ffi::CStr;
 
 // TODO: don't just make every field public
 
@@ -83,11 +84,13 @@ pub fn get_events() -> Vec<DlEvent> {
             // Our lib should never return a nullptr so the unwrap matches the API guarantee
             let event = event_ptr.as_ref().unwrap();
             let safe_event = match event.event_type {
-                /*
                 FFI_DL_EventType::Created => {
-                    DlEvent::Created { creationString: }
+                    // FIXME: blech an alloc just to provide a rust-safe cstring? maybe I should
+                    // just be returning rust's CString type? not sure...
+                    let creationCStr = std::mem::transmute::<&FFI_DL_Event, &FFI_DL_CreatedEvent>(event).creationString;
+                    let creationString = CStr::from_ptr(creationCStr).to_string_lossy().into_owned();
+                    DlEvent::CreatedEvent { creationString }
                 },
-                */
                 FFI_DL_EventType::Destroyed => {
                     let destroyedByte = std::mem::transmute::<&FFI_DL_Event, &FFI_DL_DestroyedEvent>(event).destroyedByte;
                     DlEvent::DestroyedEvent { destroyedByte }
@@ -96,8 +99,6 @@ pub fn get_events() -> Vec<DlEvent> {
                     let changedState = std::mem::transmute::<&FFI_DL_Event, &FFI_DL_ChangedEvent>(event).changedState;
                     DlEvent::ChangedEvent { changedState }
                 },
-                // FIXME: stub
-                _ => DlEvent::DestroyedEvent { destroyedByte: 0 }
             };
 
             safe_events.push(safe_event)
