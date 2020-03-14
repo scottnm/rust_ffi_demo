@@ -87,10 +87,11 @@ pub fn get_events() -> Vec<DlEvent> {
                 FFI_DL_EventType::Created => {
                     DlEvent::Created { creationString: }
                 },
-                FFI_DL_EventType::Destroyed => {
-                    DlEvent::Destroyed { destroyedByte: }
-                },
                 */
+                FFI_DL_EventType::Destroyed => {
+                    let destroyedByte = std::mem::transmute::<&FFI_DL_Event, &FFI_DL_DestroyedEvent>(event).destroyedByte;
+                    DlEvent::DestroyedEvent { destroyedByte }
+                },
                 FFI_DL_EventType::Changed => {
                     let changedState = std::mem::transmute::<&FFI_DL_Event, &FFI_DL_ChangedEvent>(event).changedState;
                     DlEvent::ChangedEvent { changedState }
