@@ -64,10 +64,15 @@ pub enum DlEvent {
     ChangedEvent  { changedState: ChangedState },
 }
 
+pub struct DlEventList {
+    pub list: Vec<DlEvent>,
+    returnPtr: FFI_DL_EventList
+}
+
 // FIXME: maybe there should be some wrapping structure that on drop(..) calls ReturnEvents or
 // something. Then the lifetime of the events could be tied to the lifetime of the structure which
 // would be more semantically correct.
-pub fn get_events() -> Vec<DlEvent> {
+pub fn get_events() -> DlEventList {
     unsafe {
         let mut count: u32 = 0;
         let count_ptr: *mut u32 = &mut count;
@@ -103,6 +108,7 @@ pub fn get_events() -> Vec<DlEvent> {
 
             safe_events.push(safe_event)
         }
-        safe_events
+
+        DlEventList { list: safe_events, returnPtr: events_buffer }
     }
 }

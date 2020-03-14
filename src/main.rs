@@ -3,8 +3,8 @@ use demo_lib::DlEvent;
 
 fn main() {
     let events = demo_lib::get_events();
-    println!("count={}, events={:?}", events.len(), events.as_ptr());
-    for event in events {
+    println!("count={}, events={:?}", events.list.len(), events.list.as_ptr());
+    for event in events.list {
         println!("Processing event of type {:?}", event);
         match event {
             DlEvent::CreatedEvent { creationString } => println!("Doing nothing with {:?}", creationString),
