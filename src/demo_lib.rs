@@ -48,6 +48,11 @@ extern "C" {
         /* Out */ count: *mut u32,
         /* Out */ events: *mut FFI_DL_EventList,
     ) -> i32;
+
+    fn DL_ReturnEvents(
+        count: u32,
+        events: FFI_DL_EventList,
+    ) -> i32;
 }
 
 // The FFI_ChangedState enum is fine to present in our safe interface, but let's alias away that
@@ -64,14 +69,12 @@ pub enum DlEvent {
     ChangedEvent  { changedState: ChangedState },
 }
 
+// TODO: maybe on drop(..) this should call ReturnEvents or something. Then the lifetime of the events could be tied to the lifetime of the structure which would be interesting
 pub struct DlEventList {
-    pub list: Vec<DlEvent>,
-    returnPtr: FFI_DL_EventList
+    pub events: Vec<DlEvent>,
+    return_ptr: FFI_DL_EventList
 }
 
-// FIXME: maybe there should be some wrapping structure that on drop(..) calls ReturnEvents or
-// something. Then the lifetime of the events could be tied to the lifetime of the structure which
-// would be more semantically correct.
 pub fn get_events() -> DlEventList {
     unsafe {
         let mut count: u32 = 0;
@@ -109,6 +112,15 @@ pub fn get_events() -> DlEventList {
             safe_events.push(safe_event)
         }
 
-        DlEventList { list: safe_events, returnPtr: events_buffer }
+        DlEventList { events: safe_events, return_ptr: events_buffer }
+    }
+}
+
+pub fn return_events(event_list: DlEventList) {
+    unsafe {
+        let res = DL_ReturnEvents(event_list.events.len() as u32, event_list.return_ptr);
+        if res != 0 {
+            panic!("DL_ReturnEvents failed! res={}", res);
+        }
     }
 }
