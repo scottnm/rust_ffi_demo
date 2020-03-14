@@ -44,29 +44,29 @@ typedef struct
 typedef DL_Event const * const * DL_Event_List;
 
 int
-GetEvents(
+DL_GetEvents(
     _Out_ uint32_t* count,
     _Out_ DL_Event_List* events
     );
 
 int
-ReturnEvents(
+DL_ReturnEvents(
     uint32_t count,
     DL_Event_List events
     );
 
 int
-HandleCreatedEvent(
+DL_HandleCreatedEvent(
     const char* creationString
     );
 
 int
-HandleDestroyedEvent(
+DL_HandleDestroyedEvent(
     uint8_t destroyedByte
     );
 
 int
-HandleChangedEvent(
+DL_HandleChangedEvent(
     ChangedState changedState
     );
 

@@ -46,7 +46,7 @@ streq(
 }
 
 int
-GetEvents(
+DL_GetEvents(
     _Out_ uint32_t* count,
     _Out_ DL_Event_List* events
     )
@@ -66,7 +66,7 @@ GetEvents(
 }
 
 int
-ReturnEvents(
+DL_ReturnEvents(
     uint32_t count,
     DL_Event_List events
     )
@@ -83,7 +83,7 @@ ReturnEvents(
 }
 
 int
-HandleCreatedEvent(
+DL_HandleCreatedEvent(
     const char* creationString
     )
 {
@@ -91,7 +91,7 @@ HandleCreatedEvent(
 }
 
 int
-HandleDestroyedEvent(
+DL_HandleDestroyedEvent(
     uint8_t destroyedByte
     )
 {
@@ -99,7 +99,7 @@ HandleDestroyedEvent(
 }
 
 int
-HandleChangedEvent(
+DL_HandleChangedEvent(
     ChangedState changedState
     )
 {
