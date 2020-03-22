@@ -61,6 +61,10 @@ extern "C" {
     fn DL_HandleDestroyedEvent(
         destroyedByte: u8,
     ) -> i32;
+
+    fn DL_HandleChangedEvent(
+        changedState: ChangedState,
+    ) -> i32;
 }
 
 // The FFI_ChangedState enum is fine to present in our safe interface, but let's alias away that
@@ -148,6 +152,15 @@ pub fn handle_destroyed_event(destroyedByte: u8) {
         let res = DL_HandleDestroyedEvent(destroyedByte);
         if res != 0 {
             panic!("DL_HandleDestroyedEvent failed! res={}", res);
+        }
+    }
+}
+
+pub fn handle_changed_event(changedState: ChangedState) {
+    unsafe {
+        let res = DL_HandleChangedEvent(changedState);
+        if res != 0 {
+            panic!("DL_HandleChangedEvent failed! res={}", res);
         }
     }
 }

@@ -9,7 +9,7 @@ fn main() {
         match event {
             DlEvent::CreatedEvent { creationString } => demo_lib::handle_created_event(creationString),
             DlEvent::DestroyedEvent { destroyedByte } => demo_lib::handle_destroyed_event(*destroyedByte),
-            DlEvent::ChangedEvent  { changedState } => println!("Doing nothing with {:?}", changedState),
+            DlEvent::ChangedEvent  { changedState } => demo_lib::handle_changed_event(*changedState),
         }
     }
     demo_lib::return_events(event_list);
