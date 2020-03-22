@@ -5,5 +5,5 @@
 
 # Upcoming Tasks
 
-[x] Translate the entire C test executable into Rust
-[x] Write an idiomatic Rust "safe" wrapper
+- [x] Translate the entire C test executable into Rust
+- [x] Write an idiomatic Rust "safe" wrapper
