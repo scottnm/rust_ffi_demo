@@ -8,7 +8,7 @@ fn main() {
         println!("Processing event of type {:?}", event);
         match event {
             DlEvent::CreatedEvent { creationString } => demo_lib::handle_created_event(creationString),
-            DlEvent::DestroyedEvent { destroyedByte } => println!("Doing nothing with {:?}", destroyedByte),
+            DlEvent::DestroyedEvent { destroyedByte } => demo_lib::handle_destroyed_event(*destroyedByte),
             DlEvent::ChangedEvent  { changedState } => println!("Doing nothing with {:?}", changedState),
         }
     }
