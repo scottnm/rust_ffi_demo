@@ -164,3 +164,95 @@ pub fn handle_changed_event(changedState: ChangedState) {
         }
     }
 }
+
+#[cfg(test)]
+mod failure_tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]
+    fn cant_return_before_get() {
+        let events = Vec::new();
+        let return_ptr = std::ptr::null();
+        let event_list = DlEventList { events, return_ptr };
+        return_events(event_list);
+    }
+
+    #[test]
+    #[should_panic]
+    fn cant_call_return_multiple_times_without_get() {
+        let event_list = get_events();
+
+        let events = Vec::new();
+        let return_ptr = event_list.return_ptr;
+        let event_list_2 = DlEventList { events, return_ptr };
+
+        return_events(event_list);
+        return_events(event_list_2);
+    }
+
+    #[test]
+    #[should_panic]
+    fn must_only_return_given_1() {
+        let event_list = get_events();
+
+        let events = Vec::new();
+        let return_ptr = event_list.return_ptr;
+        let event_list_2 = DlEventList { events, return_ptr };
+
+        return_events(event_list_2);
+    }
+
+    #[test]
+    #[should_panic]
+    fn must_only_return_given_2() {
+        let event_list = get_events();
+
+        let mut events = Vec::new();
+        events.push(DlEvent::DestroyedEvent{destroyedByte: 0});
+        let return_ptr = event_list.return_ptr;
+        let event_list_2 = DlEventList { events, return_ptr };
+
+        return_events(event_list_2);
+    }
+
+    #[test]
+    #[should_panic]
+    fn must_return_expected_creation_string() {
+        let event_list = get_events();
+        for event in &event_list.events {
+            if let DlEvent::CreatedEvent { creationString } = event {
+                let mut corruptCreationString = CString::new("GARBAGE").unwrap();
+                handle_created_event(&corruptCreationString);
+            }
+        }
+        return_events(event_list);
+    }
+
+    #[test]
+    #[should_panic]
+    fn must_return_expected_destroyed_byte() {
+        let event_list = get_events();
+        for event in &event_list.events {
+            if let DlEvent::DestroyedEvent { destroyedByte } = event {
+                handle_destroyed_event(destroyedByte + 1);
+            }
+        }
+    }
+
+    #[test]
+    #[should_panic]
+    fn must_return_expected_changed_state() {
+        let event_list = get_events();
+        for event in &event_list.events {
+            if let DlEvent::ChangedEvent { changedState } = event {
+                let wrongState = match changedState {
+                    ChangedState::A => ChangedState::B,
+                    ChangedState::B => ChangedState::A,
+                };
+
+                handle_changed_event(wrongState);
+            }
+        }
+    }
+}
