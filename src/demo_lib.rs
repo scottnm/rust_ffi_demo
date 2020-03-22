@@ -1,5 +1,5 @@
 use std::os::raw::c_char;
-use std::ffi::CStr;
+use std::ffi::{CStr, CString};
 
 // TODO: don't just make every field public
 
@@ -53,6 +53,10 @@ extern "C" {
         count: u32,
         events: FFI_DL_EventList,
     ) -> i32;
+
+    fn DL_HandleCreatedEvent(
+        creationString: *const c_char
+    ) -> i32;
 }
 
 // The FFI_ChangedState enum is fine to present in our safe interface, but let's alias away that
@@ -64,7 +68,7 @@ pub type ChangedState = FFI_ChangedState;
 #[derive(Debug)]
 pub enum DlEvent {
     // FIXME: avoid a string allocation+copy
-    CreatedEvent { creationString: String },
+    CreatedEvent { creationString: CString },
     DestroyedEvent { destroyedByte: u8 },
     ChangedEvent  { changedState: ChangedState },
 }
@@ -96,7 +100,8 @@ pub fn get_events() -> DlEventList {
                     // FIXME: blech an alloc just to provide a rust-safe cstring? maybe I should
                     // just be returning rust's CString type? not sure...
                     let creationCStr = std::mem::transmute::<&FFI_DL_Event, &FFI_DL_CreatedEvent>(event).creationString;
-                    let creationString = CStr::from_ptr(creationCStr).to_string_lossy().into_owned();
+                    // FIXME: this is a mess. two allocations. unwrap assumptions. cleanup pls
+                    let creationString = CString::new(CStr::from_ptr(creationCStr).to_string_lossy().into_owned()).unwrap();
                     DlEvent::CreatedEvent { creationString }
                 },
                 FFI_DL_EventType::Destroyed => {
@@ -121,6 +126,15 @@ pub fn return_events(event_list: DlEventList) {
         let res = DL_ReturnEvents(event_list.events.len() as u32, event_list.return_ptr);
         if res != 0 {
             panic!("DL_ReturnEvents failed! res={}", res);
+        }
+    }
+}
+
+pub fn handle_created_event(creationString: &CStr) {
+    unsafe {
+        let res = DL_HandleCreatedEvent(creationString.as_ptr());
+        if res != 0 {
+            panic!("DL_HandleCreatedEvent failed! res={}", res);
         }
     }
 }

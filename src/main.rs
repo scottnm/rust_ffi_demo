@@ -7,7 +7,7 @@ fn main() {
     for event in &event_list.events {
         println!("Processing event of type {:?}", event);
         match event {
-            DlEvent::CreatedEvent { creationString } => println!("Doing nothing with {:?}", creationString),
+            DlEvent::CreatedEvent { creationString } => demo_lib::handle_created_event(creationString),
             DlEvent::DestroyedEvent { destroyedByte } => println!("Doing nothing with {:?}", destroyedByte),
             DlEvent::ChangedEvent  { changedState } => println!("Doing nothing with {:?}", changedState),
         }
