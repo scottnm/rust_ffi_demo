@@ -46,7 +46,7 @@ streq(
 }
 
 int
-GetEvents(
+DL_GetEvents(
     _Out_ uint32_t* count,
     _Out_ DL_Event_List* events
     )
@@ -66,11 +66,18 @@ GetEvents(
 }
 
 int
-ReturnEvents(
+DL_ReturnEvents(
     uint32_t count,
     DL_Event_List events
     )
 {
+    // Can't return if no events have been retrieved from DL_GetEvents
+    if (G_currentEvents == NULL)
+    {
+        return 1;
+    }
+
+    // Can only return the exact set of events that was previosly retrieved from DL_GetEvents
     if (count != G_currentEventCount ||
         events != G_currentEvents)
     {
@@ -83,7 +90,7 @@ ReturnEvents(
 }
 
 int
-HandleCreatedEvent(
+DL_HandleCreatedEvent(
     const char* creationString
     )
 {
@@ -91,7 +98,7 @@ HandleCreatedEvent(
 }
 
 int
-HandleDestroyedEvent(
+DL_HandleDestroyedEvent(
     uint8_t destroyedByte
     )
 {
@@ -99,7 +106,7 @@ HandleDestroyedEvent(
 }
 
 int
-HandleChangedEvent(
+DL_HandleChangedEvent(
     ChangedState changedState
     )
 {
